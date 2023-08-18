@@ -1,4 +1,4 @@
-name: Extract File Name from One Job to Another Job
+name: Deploy WebSite
 on: push
 jobs:
   test:
@@ -6,6 +6,11 @@ jobs:
     steps:
     - name: Get code
       uses: actions/checkout@v3
+    - name: Caching Dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.npm
+        key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
     - name: Install Dependency
       run: npm ci
     - name: Lint Job
@@ -20,6 +25,11 @@ jobs:
     steps:
     - name: Get code
       uses: actions/checkout@v3
+    - name: Caching Dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.npm
+        key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
     - name: Install Dependency
       run: npm ci
     - name: Build Website
