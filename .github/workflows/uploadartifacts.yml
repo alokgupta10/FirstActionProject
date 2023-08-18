@@ -1,0 +1,43 @@
+name: Upload and Download Artifacts
+on: push
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Get code
+      uses: actions/checkout@v3
+    - name: Install Dependency
+      run: npm ci
+    - name: Lint Job
+      run: npm run lint
+    - name: Test Code
+      run: npm run test
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Get code
+      uses: actions/checkout@v3
+    - name: Install Dependency
+      run: npm ci
+    - name: Build Website
+      run: npm run build
+    - name: Upload Artifacts
+      uses: actions/upload-artifacts@v3
+      with:
+        name: dist-files
+        path: |
+          dist
+          package.json
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Get Build Artifacts
+      uses: actions/download-artifacts@v3
+      with:
+        name: dist-files
+    - name: Output Content
+      run: ls
+    - name: Deploy Code
+      run: echo "Deploying..."
