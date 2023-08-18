@@ -23,7 +23,7 @@ jobs:
     - name: Build Website
       run: npm run build
     - name: Upload Artifacts
-      uses: actions/upload-artifacts@v3
+      uses: actions/upload-artifact@v3
       with:
         name: dist-files
         path: |
@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Get Build Artifacts
-      uses: actions/download-artifacts@v3
+      uses: actions/download-artifact@v3
       with:
         name: dist-files
     - name: Output Content
