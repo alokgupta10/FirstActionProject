@@ -1,5 +1,5 @@
-name: Upload and Download Artifacts
-on: workflow_dispatch
+name: Extract File Name from One Job to Another Job
+on: push
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -15,6 +15,8 @@ jobs:
   build:
     needs: test
     runs-on: ubuntu-latest
+    outputs:
+      script-file: ${{ steps.publish.outputs.something }}
     steps:
     - name: Get code
       uses: actions/checkout@v3
@@ -22,6 +24,9 @@ jobs:
       run: npm ci
     - name: Build Website
       run: npm run build
+    - name: Publish JavaScript Filename
+      id: publish
+      run: find dist/assests/*.js -type f -execdir echo 'something={}' >> $GITHUB_OUTPUT ':'
     - name: Upload Artifacts
       uses: actions/upload-artifact@v3
       with:
@@ -40,5 +45,7 @@ jobs:
         name: dist-files
     - name: Output Content
       run: ls
+    - name: Output FileName
+      run: echo "${{ needs.build.outputs.script-file }}"
     - name: Deploy Code
       run: echo "Deploying..."
